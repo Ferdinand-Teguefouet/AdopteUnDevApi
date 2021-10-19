@@ -2,6 +2,7 @@
 using AdopteUnDevApi.Tools;
 using Data_Access_Layer.Entities;
 using Data_Access_Layer.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -16,24 +17,30 @@ namespace AdopteUnDevApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly IRepository<User> _user;
+        private readonly ILogin _login;
+        private readonly ITokenManager _token;
 
-        public UserController(IRepository<User> user)
+        public UserController(IRepository<User> user, ILogin login, ITokenManager token)
         {
             _user = user;
+            _login = login;
+            _token = token;
         }
 
         [HttpGet]
+        [Authorize("devPolicy")]
         public IActionResult GetAll()
         {
-            return Ok(_user.GetAll());
+            return Ok(_login.GetAll());
         }
 
         [HttpGet("{id}")]
+        [Authorize("devPolicy")]
         public IActionResult GetById(int id)
         {
             try
             {                
-                return Ok(_user.GetById(id));
+                return Ok(_login.GetById(id));
             }
             catch (Exception e)
             {
@@ -42,7 +49,28 @@ namespace AdopteUnDevApi.Controllers
             
         }
         [HttpPost]
-        public IActionResult Insert(UserForm u)
+        [Route("login")]
+        public IActionResult Login([FromBody]  LoginModel login)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Vérifier les champs du formulaire.");
+            }
+            UserConnected uc;
+            try
+            {
+                uc = _login.GetExistedUser(login.ToDalLogin());
+                UserModel connectedUser = _token.GenerateJWT(uc.ToApiUser());
+                return Ok(connectedUser);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }            
+        }
+        [HttpPost]
+        [Route("register")]
+        public IActionResult Insert([FromBody] UserForm u)
         {
             if (!ModelState.IsValid)
             {
@@ -60,6 +88,7 @@ namespace AdopteUnDevApi.Controllers
             
         }
         [HttpPut]
+        [Authorize("devPolicy")]
         public IActionResult Update(UserForm u)
         {
             if (!ModelState.IsValid)
@@ -83,6 +112,7 @@ namespace AdopteUnDevApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize("devPolicy")]
         public IActionResult Delete(int id)
         {
             try

@@ -2,6 +2,7 @@
 using AdopteUnDevApi.Tools;
 using Data_Access_Layer.Entities;
 using Data_Access_Layer.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,12 +24,14 @@ namespace AdopteUnDevApi.Controllers
         }
 
         [HttpGet]
+        [Authorize("clientPolicy")]
         public IActionResult GetAll()
         {
             return Ok(_contract.GetAll());
         }
 
         [HttpGet("{id}")]
+        [Authorize("clientPolicy")]
         public IActionResult GetById(int id)
         {
             try
@@ -42,6 +45,7 @@ namespace AdopteUnDevApi.Controllers
 
         }
         [HttpPost]
+        [Authorize("clientPolicy")]
         public IActionResult Insert(ContractForm cf)
         {
             if (!ModelState.IsValid)
@@ -60,6 +64,7 @@ namespace AdopteUnDevApi.Controllers
 
         }
         [HttpPut]
+        [Authorize("clientPolicy")]
         public IActionResult Update(ContractForm cf)
         {
             if (!ModelState.IsValid)
@@ -83,6 +88,7 @@ namespace AdopteUnDevApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize("clientPolicy")]
         public IActionResult Delete(int id)
         {
             try

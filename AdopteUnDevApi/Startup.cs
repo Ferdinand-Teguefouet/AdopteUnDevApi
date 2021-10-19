@@ -1,6 +1,8 @@
+using AdopteUnDevApi.Tools;
 using Data_Access_Layer.Entities;
 using Data_Access_Layer.Interface;
 using Data_Access_Layer.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -9,10 +11,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace AdopteUnDevApi
@@ -39,6 +43,32 @@ namespace AdopteUnDevApi
             services.AddScoped<IRepository<User>, RepositoryUser>();
             services.AddScoped<IRepository<Contract>, RepositoryContract>();
             services.AddScoped<IRepository<Skill>, RepositorySkill>();
+            services.AddScoped<ILogin, RepositoryExistedUser>();
+
+            // Service pour l'utilisation de l'objet TokenManager
+            services.AddScoped<ITokenManager, TokenManager>();
+
+            // Les services pour la police de sécurité
+            services.AddAuthorization(options => {
+                options.AddPolicy("clientPolicy", cpolicy => cpolicy.RequireRole("client"));
+                options.AddPolicy("devPolicy", dpolicy => dpolicy.RequireRole("developper"));
+            });
+
+            // Service d'authentification
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                 {
+                     options.TokenValidationParameters = new TokenValidationParameters()
+                     {
+                        ValidateIssuer = true,
+                        ValidIssuer = TokenManager._issuer,
+                        ValidateAudience = true,
+                        ValidAudience = TokenManager._audience,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(TokenManager._secretKey))
+                     };
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +85,7 @@ namespace AdopteUnDevApi
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

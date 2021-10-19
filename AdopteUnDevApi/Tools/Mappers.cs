@@ -22,6 +22,27 @@ namespace AdopteUnDevApi.Tools
             };
         }
 
+        public static UserLogin ToDalLogin(this LoginModel login)
+        {
+            return new UserLogin
+            {
+                Email = login.Email,
+                Password = login.Password
+            };
+        }
+
+        public static UserModel ToApiUser(this UserConnected uc)
+        {
+            return new UserModel
+            {
+                Id = uc.Id,
+                Email = uc.Email,
+                Name = uc.Name,
+                Telephone = uc.Telephone,
+                IsClient = uc.IsClient
+            };
+        }
+
         public static Contract ToDalContract(this ContractForm cf)
         {
             return new Contract

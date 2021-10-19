@@ -2,6 +2,7 @@
 using AdopteUnDevApi.Tools;
 using Data_Access_Layer.Entities;
 using Data_Access_Layer.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,12 +24,14 @@ namespace AdopteUnDevApi.Controllers
         }
 
         [HttpGet]
+        [Authorize("devPolicy")]
         public IActionResult GetAll()
         {
             return Ok(_skill.GetAll());
         }
 
         [HttpGet("{id}")]
+        [Authorize("devPolicy")]
         public IActionResult GetById(int id)
         {
             try
@@ -42,6 +45,7 @@ namespace AdopteUnDevApi.Controllers
 
         }
         [HttpPost]
+        [Authorize("devPolicy")]
         public IActionResult Insert(SkillForm sf)
         {
             if (!ModelState.IsValid)
@@ -60,6 +64,7 @@ namespace AdopteUnDevApi.Controllers
 
         }
         [HttpPut]
+        [Authorize("devPolicy")]
         public IActionResult Update(SkillForm sf)
         {
             if (!ModelState.IsValid)
@@ -83,6 +88,7 @@ namespace AdopteUnDevApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize("devPolicy")]
         public IActionResult Delete(int id)
         {
             try
