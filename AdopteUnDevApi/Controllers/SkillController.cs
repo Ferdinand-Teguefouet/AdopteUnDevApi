@@ -32,7 +32,7 @@ namespace AdopteUnDevApi.Controllers
 
         [HttpGet("{id}")]
         [Authorize("devPolicy")]
-        public IActionResult GetById(int id)
+        public IActionResult GetById(int id, string _token)
         {
             try
             {

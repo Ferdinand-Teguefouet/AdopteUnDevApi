@@ -1,5 +1,6 @@
 ﻿using AdopteUnDevApi.Models;
 using Data_Access_Layer.Entities;
+using Data_Access_Layer.Entities.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,6 +62,17 @@ namespace AdopteUnDevApi.Tools
                 Id = sf.Id,
                 SkillName = sf.SkillName,
                 Description = sf.Description
+            };
+        }
+
+        public static ProfilDevModel ToApiProfilDev(this ProfilDev pv)
+        {
+            return new ProfilDevModel
+            {
+                Name = pv.Name,
+                Skill = pv.Skill,
+                Category = pv.Category,
+                Description = pv.Description
             };
         }
     }

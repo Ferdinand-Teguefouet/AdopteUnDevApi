@@ -24,7 +24,8 @@ namespace AdopteUnDevApi.Controllers
         }
 
         [HttpGet]
-        [Authorize("clientPolicy")]
+        //[Authorize("clientPolicy")]
+        [Authorize("devPolicy")]
         public IActionResult GetAll()
         {
             return Ok(_contract.GetAll());

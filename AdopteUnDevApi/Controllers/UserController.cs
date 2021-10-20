@@ -28,14 +28,12 @@ namespace AdopteUnDevApi.Controllers
         }
 
         [HttpGet]
-        [Authorize("devPolicy")]
         public IActionResult GetAll()
         {
             return Ok(_login.GetAll());
         }
 
         [HttpGet("{id}")]
-        [Authorize("devPolicy")]
         public IActionResult GetById(int id)
         {
             try
@@ -88,7 +86,6 @@ namespace AdopteUnDevApi.Controllers
             
         }
         [HttpPut]
-        [Authorize("devPolicy")]
         public IActionResult Update(UserForm u)
         {
             if (!ModelState.IsValid)

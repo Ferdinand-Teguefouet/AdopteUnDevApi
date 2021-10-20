@@ -1,5 +1,6 @@
 using AdopteUnDevApi.Tools;
 using Data_Access_Layer.Entities;
+using Data_Access_Layer.Entities.Views;
 using Data_Access_Layer.Interface;
 using Data_Access_Layer.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -43,6 +44,7 @@ namespace AdopteUnDevApi
             services.AddScoped<IRepository<User>, RepositoryUser>();
             services.AddScoped<IRepository<Contract>, RepositoryContract>();
             services.AddScoped<IRepository<Skill>, RepositorySkill>();
+            services.AddScoped<IRepository<ProfilDev>, RepositoryProfilDev>();
             services.AddScoped<ILogin, RepositoryExistedUser>();
 
             // Service pour l'utilisation de l'objet TokenManager

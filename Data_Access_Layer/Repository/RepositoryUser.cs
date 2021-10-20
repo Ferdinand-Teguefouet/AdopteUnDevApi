@@ -103,6 +103,22 @@ namespace Data_Access_Layer.Repository
 
                 connection.Open();
                 cmd.ExecuteNonQuery();
+                //SqlCommand cmd1 = connection.CreateCommand();
+                //cmd1.CommandText = "select top 1 * from Users order by Id desc";
+                //SqlDataReader reader = cmd1.ExecuteReader();
+                //int lastId = (int)reader["Id"];
+                //if (_obj.IsClient)
+                //{
+                //    SqlCommand cmd2 = connection.CreateCommand();
+                //    cmd2.CommandText = "INSERT INTO Contracts (ClientId_fk) VALUES ClientId_fk = @myId";
+                //    cmd2.Parameters.AddWithValue("myId", lastId);
+                //    cmd2.ExecuteNonQuery();
+                //}
+
+                //SqlCommand cmd3 = connection.CreateCommand();
+                //cmd3.CommandText = "INSERT INTO UserSkills (UserId_fk) VALUES UserId_fk) = @myId";
+                //cmd3.Parameters.AddWithValue("myId", lastId);
+                //cmd3.ExecuteNonQuery();
                 connection.Close();
             }
         }
@@ -126,6 +142,11 @@ namespace Data_Access_Layer.Repository
                     cmd.ExecuteNonQuery();
                 }
             }
+        }
+
+        private string SetFKContract()
+        {
+            return "INSERT INTO Contracts (ClientId_fk) VALUES ClientId_fk = @myId";
         }
     }
 }
